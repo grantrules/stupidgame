@@ -1,0 +1,4 @@
+viewport
+- should be based off character's position and movement and THEN the map
+
+character should not be aware of its visual bounds, just its map-based boundaries
