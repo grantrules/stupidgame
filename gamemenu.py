@@ -5,6 +5,8 @@ from gamesettings import GameSettings
 from gamequit import GameQuit
 from about import About
 
+from sound import play_music
+
 
 
 fontpath = "gfx/Acme-Regular.ttf"
@@ -38,6 +40,7 @@ class GameMenu:
         self.font = pygame.font.Font(fontpath, 20)
         self.selected = 0
         self.lastkeys = []
+        play_music("title")
 
     def run(self):
         if self.dirty:

@@ -6,6 +6,8 @@ from pygame.locals import *
 from gamemenu import GameMenu
 from title import Title
 
+import sound
+
 import gamesettings
 
 logger = logging.getLogger(__name__)
@@ -25,8 +27,6 @@ class GameRunner():
         self.screen = screen
         self.runner = Title(self, GameMenu(self, None), game_title)
         self.cur_time = 0
-
-        gamesettings.load_settings()
 
     def run(self):
         """This is our app main loop"""
@@ -72,6 +72,10 @@ if __name__ == "__main__":
     screen = init_screen(640,480)
     pygame.display.set_caption(game_title)
     logging.basicConfig(level=logging.DEBUG)
+
+    gamesettings.load_settings()
+
+    sound.initialize()
 
     # loop through a bunch of maps in the maps folder
     try:

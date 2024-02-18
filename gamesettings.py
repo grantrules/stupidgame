@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 settings_file = "settings.pickle"
 
-settings_desc = {'music_volume': float,
-            'sound_volume': float,
-            'fullscreen': float,
+settings_desc = {'music_volume': int,
+            'sound_volume': int,
+            'fullscreen': bool,
             }
 
-settings = {'music_volume': 1.0,
-            'sound_volume': 1.0,
+settings = {'music_volume': 10,
+            'sound_volume': 10,
             'fullscreen': False,
             }
 
@@ -118,8 +118,8 @@ class SettingItem:
 
 def get_settings_menu():
     settings_menu = [
-        SettingItem("Sound Effects level", "sound_volume", settings['sound_volume'], Slider(0,1.0,0.1)),
-        SettingItem("Music level", "music_volume", settings['sound_volume'], Slider(0,1.0,0.1)),
+        SettingItem("Sound Effects level", "sound_volume", settings['sound_volume'], Slider(0,10,1)),
+        SettingItem("Music level", "music_volume", settings['music_volume'], Slider(0,10,1)),
         SettingItem("Fullscreen", "fullscreen", settings['fullscreen'], Checkbox()),
 
         SettingItem("Save", "save", special=True)
@@ -170,7 +170,11 @@ class GameSettings:
                 elif event.key == pygame.K_RETURN and self.menu[self.selected].key == "save":
                     logger.info("saving settings")
                     logger.debug(settings)
+                    for item in self.menu:
+                        if item.key in settings:
+                            settings[item.key] = item.value
                     save_settings()
+                    self.menu = get_settings_menu()
                 else:                        
                     self.menu[self.selected].handle_input(events)
                     self.dirty = True
