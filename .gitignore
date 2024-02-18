@@ -5,3 +5,5 @@ Scripts
 bin
 Include
 pyvenv.cfg
+settings.pickle
+.vscode

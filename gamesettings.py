@@ -39,6 +39,7 @@ def load_settings():
 
 
 def save_settings():
+    logger.debug(settings)
     file = open(settings_file, "wb")
     pickle.dump(settings, file)
     file.close()
@@ -169,7 +170,6 @@ class GameSettings:
                         self.gamerunner.runner = self.lastrunner
                 elif event.key == pygame.K_RETURN and self.menu[self.selected].key == "save":
                     logger.info("saving settings")
-                    logger.debug(settings)
                     for item in self.menu:
                         if item.key in settings:
                             settings[item.key] = item.value
