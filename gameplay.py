@@ -18,19 +18,19 @@ keys = {
 
 class Player:
     def __init__(self, sprites, pos=(10,10)):
-        self.movement_speed = 10 # pps
-        self.animation_speed = 3 # fps
+        self.movement_speed = 6 # pps
+        self.animation_speed = 300 # ms per frame
         self.last_frame = 0
         self.pos = pos
         self.sprites = sprites
         self.lastmovement = (0,1)
         self.movement = (0,0)
 
-    def is_moving(self):
+    def is_moving(self) -> bool:
         return self.movement != (0,0)
 
 
-    def move(self, movement, time):
+    def move(self, movement, time) -> None:
         secs = time/100
         self.movement = movement
         self.lastmovement = movement
@@ -45,17 +45,18 @@ class Player:
 
         self.pos = (posx + movx, posy + movy)
 
-    def render(self):
+    def render(self) -> pygame.Surface:
 
         sprites = self.sprites.sprites["player."+movement_to_direction(self.lastmovement)]
-        frame = 0 if not self.is_moving() else int(get_tick() / self.animation_speed) % len(sprites)
+        frame = 0 if not self.is_moving() \
+                    else int(get_tick() / self.animation_speed) % len(sprites)
         sprite = sprites[frame]
 
         return sprite
 
 
 
-def movement_to_direction(movement):
+def movement_to_direction(movement) -> str:
     # i hate this but i can't decide on a better way
     # movement should only be a tuple with two values of -1, 0, or 1
     # default to "s"
@@ -85,7 +86,7 @@ class GamePlay:
 
         self.player = Player(self.sprites)
 
-    def load_map(self, filename):
+    def load_map(self, filename) -> None:
         """Create a renderer, load data, and print some debug info"""
         self.renderer = TiledRenderer(filename)
 
@@ -103,7 +104,7 @@ class GamePlay:
         for k, v in self.renderer.tmx_data.get_tile_colliders():
             logger.info("%s\t%s", k, list(v))
 
-    def draw(self, surface):
+    def draw(self, surface) -> None:
 
         temp = pygame.Surface(size=(640,480))
 
@@ -117,7 +118,7 @@ class GamePlay:
         surface.blit(self.player.render(), self.player.pos)
 
 
-    def run(self):
+    def run(self) -> None:
         movement = (0,0)
         if self.moving:
             for key, (movx, movy) in keys.items():
@@ -128,7 +129,7 @@ class GamePlay:
 
         self.draw(self.screen)
 
-    def handle_input(self, events):
+    def handle_input(self, events) -> None:
 
         self.keys = pygame.key.get_pressed()
 
