@@ -14,6 +14,43 @@ keys = {
     pygame.K_RIGHT: (1,0),
 }
 
+class Player:
+    def __init__(self, sprites, pos=(10,10)):
+        self.movement_speed = 10 # pps
+        self.animation_speed = 3 # fps
+        self.last_frame = 0
+        self.pos = pos
+        self.sprites = sprites
+        self.lastmovement = (0,1)
+        self.movement = (0,0)
+
+    def is_moving(self):
+        return self.movement != (0,0)
+
+
+    def move(self, movement, time):
+        secs = time/100
+        self.movement = movement
+        self.lastmovement = movement
+        (posx, posy) =  self.pos
+        (movx, movy) = movement
+
+        movx = movx * (self.movement_speed * secs)
+        movy = movy * (self.movement_speed * secs)
+
+        self.pos = (posx + movx, posy + movy)
+
+    def render(self):
+
+        sprites = self.sprites.sprites["player."+movement_to_direction(self.lastmovement)]
+        frame = 0 if not self.is_moving() else int(pygame.time.get_ticks() / self.animation_speed) % len(sprites)
+        print(frame)
+        sprite = sprites[frame]
+
+        return sprite
+
+
+
 def movement_to_direction(movement):
     # i hate this but i can't decide on a better way
     # movement should only be a tuple with two values of -1, 0, or 1
@@ -33,14 +70,19 @@ class GamePlay:
         self.moving = False
         self.dirty = False
         self.exit_status = 0
+
+        self.tick = pygame.time.get_ticks()
+        self.lasttick = self.tick
+
         self.load_map(map)
         self.sprites = Sprites()
         self.cur_time = 0
         self.camerax = 0
         self.cameray = 0
         self.pos = (0,0)
-        self.lastmovement = (0,1)
         self.ingame = True
+
+        self.player = Player(self.sprites)
 
     def load_map(self, filename):
         """Create a renderer, load data, and print some debug info"""
@@ -71,7 +113,7 @@ class GamePlay:
         # this will also 'blit' the temp surface to the display
         pygame.transform.smoothscale(temp, surface.get_size(), surface)
 
-        surface.blit(self.sprites.sprites["player."+movement_to_direction(self.lastmovement)][0], self.pos)
+        surface.blit(self.player.render(), self.player.pos)
 
 
         # display a bit of use info on the display
@@ -81,23 +123,21 @@ class GamePlay:
 
 
     def run(self):
+        self.tick = pygame.time.get_ticks()
+        movement = (0,0)
         if self.moving:
-            movement = (0,0)
             for key, (x2, y2) in keys.items():
                 if self.keys[key]:
                     (x,y) = movement
                     movement = (x + x2, y + y2)
+            #print(movement, self.pos)
+        self.player.move(movement, self.tick - self.lasttick)
 
-            self.movement = movement
-            self.lastmovement = movement
-            (posx, posy) =  self.pos
-            (movx, movy) = movement
-            self.pos = (posx + movx, posy + movy)
-            print(movement, self.pos)
-        else:
-            self.movement = (0,0)
+
 
         self.draw(self.screen)
+
+        self.lasttick = self.tick
 
 
     def handle_input(self, events):
