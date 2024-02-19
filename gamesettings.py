@@ -69,7 +69,6 @@ class Slider:
 
     def render(self, value):
         pos = (value - self.min) / (self.max - self.min) * self.width
-        print(pos)
 
         surface = pygame.Surface((self.width,10))
         pygame.draw.rect(surface, (255,255,255), (0,0,self.width,2))
@@ -103,7 +102,7 @@ class SettingItem:
         return self.value != self.orig_value
     
     def render(self, active=False):
-        surface = pygame.Surface((300,20))
+        surface = pygame.Surface((400,font.get_height()))
         
         ren = font.render(self.name, 1, active_color if active else inactive_color)
         surface.blit(ren, (0,surface.get_height() / 2 - ren.get_height() / 2))
@@ -136,7 +135,7 @@ class GameSettings:
         self.gamerunner = gamerunner
         self.lastrunner = lastrunner
         self.dirty = True
-        self.font = pygame.font.Font(fontpath, 20)
+        self.font = pygame.font.Font(fontpath, 40)
         font = self.font
         self.selected = 0
         self.menu = get_settings_menu()

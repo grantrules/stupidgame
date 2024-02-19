@@ -37,7 +37,7 @@ class GameMenu:
         self.lastrunner = lastrunner
         self.paused = bool(lastrunner)
         self.dirty = True
-        self.font = pygame.font.Font(fontpath, 20)
+        self.font = pygame.font.Font(fontpath, 40)
         self.selected = 0
         self.lastkeys = []
         play_music("title")
