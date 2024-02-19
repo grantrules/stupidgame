@@ -10,3 +10,6 @@ def update_tick():
 
 def get_diff():
     return tick - lasttick
+
+def get_tick():
+    return tick

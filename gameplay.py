@@ -3,7 +3,7 @@ import pygame, logging
 from sprites import Sprites
 from tiled import TiledRenderer
 
-from tick import get_diff, lasttick, tick
+from tick import get_diff, get_tick
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +37,9 @@ class Player:
         (posx, posy) =  self.pos
         (movx, movy) = movement
 
+        if abs(movx + movy) == 2:
+            secs * .7
+
         movx = movx * (self.movement_speed * secs)
         movy = movy * (self.movement_speed * secs)
 
@@ -45,7 +48,7 @@ class Player:
     def render(self):
 
         sprites = self.sprites.sprites["player."+movement_to_direction(self.lastmovement)]
-        frame = 0 if not self.is_moving() else int(tick / self.animation_speed) % len(sprites)
+        frame = 0 if not self.is_moving() else int(get_tick() / self.animation_speed) % len(sprites)
         sprite = sprites[frame]
 
         return sprite
