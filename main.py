@@ -7,6 +7,8 @@ from gamemenu import GameMenu
 from title import Title
 from screen import init_screen
 
+from tick import update_tick
+
 import sound
 
 import gamesettings
@@ -22,7 +24,6 @@ class GameRunner():
     def __init__(self, screen):
         self.screen = screen
         self.runner = Title(self, GameMenu(self, None), game_title)
-        self.cur_time = 0
 
     def run(self):
         self.dirty = True
@@ -30,8 +31,8 @@ class GameRunner():
         self.exit_status = 1
 
         while self.running:
-            self.last_time = self.cur_time
-            self.runner.cur_time = pygame.time.get_ticks()
+
+            update_tick()
             
             events = pygame.event.get()
 

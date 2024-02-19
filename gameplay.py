@@ -3,6 +3,8 @@ import pygame, logging
 from sprites import Sprites
 from tiled import TiledRenderer
 
+from tick import get_diff, lasttick, tick
+
 logger = logging.getLogger(__name__)
 
 map = "gfx/basic.tmx"
@@ -43,8 +45,7 @@ class Player:
     def render(self):
 
         sprites = self.sprites.sprites["player."+movement_to_direction(self.lastmovement)]
-        frame = 0 if not self.is_moving() else int(pygame.time.get_ticks() / self.animation_speed) % len(sprites)
-        print(frame)
+        frame = 0 if not self.is_moving() else int(tick / self.animation_speed) % len(sprites)
         sprite = sprites[frame]
 
         return sprite
@@ -70,9 +71,6 @@ class GamePlay:
         self.moving = False
         self.dirty = False
         self.exit_status = 0
-
-        self.tick = pygame.time.get_ticks()
-        self.lasttick = self.tick
 
         self.load_map(map)
         self.sprites = Sprites()
@@ -116,29 +114,16 @@ class GamePlay:
         surface.blit(self.player.render(), self.player.pos)
 
 
-        # display a bit of use info on the display
-
-       
-
-
-
     def run(self):
-        self.tick = pygame.time.get_ticks()
         movement = (0,0)
         if self.moving:
-            for key, (x2, y2) in keys.items():
+            for key, (movx, movy) in keys.items():
                 if self.keys[key]:
                     (x,y) = movement
-                    movement = (x + x2, y + y2)
-            #print(movement, self.pos)
-        self.player.move(movement, self.tick - self.lasttick)
-
-
+                    movement = (x + movx, y + movy)
+        self.player.move(movement, get_diff())
 
         self.draw(self.screen)
-
-        self.lasttick = self.tick
-
 
     def handle_input(self, events):
 
