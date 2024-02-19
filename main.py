@@ -71,7 +71,10 @@ if __name__ == "__main__":
     pygame.display.set_caption(game_title)
     logging.basicConfig(level=logging.DEBUG)
 
-    gamesettings.register_setting_change_handler("fullscreen", lambda x: pygame.display.set_mode((0,0), pygame.FULLSCREEN if x else pygame.RESIZABLE))
+    if gamesettings.settings['fullscreen']:
+        pygame.display.toggle_fullscreen()
+
+    gamesettings.register_setting_change_handler("fullscreen", lambda x: pygame.display.toggle_fullscreen())
 
     sound.initialize()
 
