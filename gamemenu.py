@@ -9,7 +9,6 @@ from sound import play_music
 
 from fonts import register_font, fonts
 
-
 def load_resources():
     fontpath = "gfx/Acme-Regular.ttf"
     register_font("menu", fontpath, 40)

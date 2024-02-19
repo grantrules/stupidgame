@@ -2,6 +2,8 @@ import pygame
 
 import pickle, logging
 
+from gamemenudialog import GameMenuDialog as Dialog
+
 fontpath = "gfx/Acme-Regular.ttf"
 
 inactive_color = (255,255,255)
@@ -163,6 +165,15 @@ class GameSettings:
         self.selected = 0
         self.menu = get_settings_menu()
 
+        def on_yes():
+            self.update_settings()
+            self.gamerunner.runner = lastrunner
+
+        def on_no():
+            self.gamerunner.runner = lastrunner
+
+        self.escdialog = Dialog("Save changes?", on_yes, on_no)
+
     def has_changed(self):
         return any([item.changed() for item in self.menu])
     
@@ -174,9 +185,14 @@ class GameSettings:
                 self.screen.blit(ren, (self.screen.get_width() / 2 - ren.get_width() / 2,x*ren.get_height()+10))
             self.dirty = False
 
+        if self.escdialog.visible:
+            self.escdialog.draw(self.screen)
+
     def handle_input(self, events):
         for event in events:
-            if event.type == pygame.KEYDOWN:
+            if self.escdialog.visible:
+                self.escdialog.handle_input(events)
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
                     self.selected = (self.selected + 1) % len(self.menu)
                     self.dirty = True
@@ -186,17 +202,21 @@ class GameSettings:
                 elif event.key == pygame.K_ESCAPE:
                     if self.has_changed():
                         logger.info("prompt to confirm saving")
+                        self.escdialog.visible = True
                         # confirm saving
                         pass
                     else:
                         self.gamerunner.runner = self.lastrunner
                 elif event.key == pygame.K_RETURN and self.menu[self.selected].key == "save":
                     logger.info("saving settings")
-                    for item in self.menu:
-                        if item.key in settings:
-                            update_setting(item.key, item.value)
-                    save_settings()
+                    self.update_settings()
                     self.menu = get_settings_menu()
                 else:                        
                     self.menu[self.selected].handle_input(events)
                     self.dirty = True
+
+    def update_settings(self) -> None:
+        for item in self.menu:
+            if item.key in settings:
+                update_setting(item.key, item.value)
+        save_settings()
