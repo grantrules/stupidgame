@@ -37,7 +37,7 @@ class Player:
         (posx, posy) =  self.pos
         (movx, movy) = movement
 
-        if abs(movx + movy) == 2:
+        if abs(movx) + abs(movy) == 2:
             secs * .7
 
         movx = movx * (self.movement_speed * secs)
