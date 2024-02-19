@@ -9,6 +9,8 @@ from screen import init_screen
 
 from tick import update_tick
 
+from resources import load_all_resources
+
 import sound
 
 import gamesettings
@@ -63,6 +65,7 @@ if __name__ == "__main__":
     pygame.font.init()
 
     gamesettings.load_settings()
+    load_all_resources()
 
     screen = init_screen(640,480)
     pygame.display.set_caption(game_title)

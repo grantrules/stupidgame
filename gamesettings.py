@@ -22,6 +22,29 @@ settings = {'music_volume': 10,
             'fullscreen': False,
             }
 
+change_handlers = {}
+
+
+def register_setting_change_handler(setting, func):
+    if setting in change_handlers:
+        change_handlers[setting].add(func)
+    else:
+        change_handlers[setting] = [func]
+
+def call_handlers(setting, value):
+    handlers = change_handlers[setting] if setting in change_handlers else []
+    for h in handlers:
+        h(value)
+
+def update_setting(setting, value):
+    last = settings[setting]
+    if last != value:
+        settings[setting] = value
+        call_handlers(setting, value)
+
+
+
+
 font = None
 
 def load_settings():
@@ -35,7 +58,7 @@ def load_settings():
 
     for (key, type) in settings_desc.items():
         if key in user_settings and isinstance(user_settings[key], type):
-            settings[key] = user_settings[key]
+            update_setting(key, user_settings[key])
 
 
 def save_settings():
@@ -171,7 +194,7 @@ class GameSettings:
                     logger.info("saving settings")
                     for item in self.menu:
                         if item.key in settings:
-                            settings[item.key] = item.value
+                            update_setting(item.key, item.value)
                     save_settings()
                     self.menu = get_settings_menu()
                 else:                        

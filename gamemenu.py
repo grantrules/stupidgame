@@ -7,9 +7,14 @@ from about import About
 
 from sound import play_music
 
+from fonts import register_font, fonts
 
 
-fontpath = "gfx/Acme-Regular.ttf"
+def load_resources():
+    fontpath = "gfx/Acme-Regular.ttf"
+    register_font("menu", fontpath, 40)
+    
+
 
 inactive = (255,255,255)
 active = (255,0,0)
@@ -37,7 +42,7 @@ class GameMenu:
         self.lastrunner = lastrunner
         self.paused = bool(lastrunner)
         self.dirty = True
-        self.font = pygame.font.Font(fontpath, 40)
+        self.font = fonts.get("menu")
         self.selected = 0
         self.lastkeys = []
         play_music("title")
