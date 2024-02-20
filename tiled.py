@@ -16,18 +16,9 @@ class TiledRenderer(object):
         # this value is used later to render the entire map to a pygame surface
         self.map_size = tm.width * tm.tilewidth, tm.height * tm.tileheight
         self.tmx_data = tm
+        self.lasttiles = {}
 
     def render_map(self, surface, window):
-        """Render our map to a pygame surface
-
-        Feel free to use this as a starting point for your pygame app.
-        This method expects that the surface passed is the same pixel
-        size as the map.
-
-        Scrolling is a often requested feature, but pytmx is a map
-        loader, not a renderer!  If you'd like to have a scrolling map
-        renderer, please see my pyscroll project.
-        """
 
         # fill the background color of our render surface
         if self.tmx_data.background_color:
@@ -57,12 +48,16 @@ class TiledRenderer(object):
         tw = self.tmx_data.tilewidth
         th = self.tmx_data.tileheight
         surface_blit = surface.blit
+        in_view = self.in_view
+        
+        tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
+                if layer.name not in self.lasttiles \
+                else self.lasttiles[layer.name]
 
-        # iterate over the tiles in the layer, and blit them
-        if self.tmx_data.orientation == "orthogonal":
-            for x, y, image in layer.tiles():
-                if self.in_view(x*tw, y*th, window):
-                    surface_blit(image, (x * tw, y * th))
+        for x, y, image in tiles:
+            surface_blit(image, (x * tw, y * th))
+        
+        self.lasttiles[layer.name] = tiles
 
     def render_object_layer(self, surface, layer):
         """Render all TiledObjects contained in this layer"""
