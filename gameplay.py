@@ -17,7 +17,7 @@ keys = {
 }
 
 class Player:
-    def __init__(self, sprites, pos=(10,10)):
+    def __init__(self, sprites, pos=(100,100)):
         self.movement_speed = 6 # pps
         self.animation_speed = 300 # ms per frame
         self.last_frame = 0
@@ -38,7 +38,7 @@ class Player:
         (movx, movy) = movement
 
         if abs(movx) + abs(movy) == 2:
-            secs * .7
+            secs = secs * .7
 
         movx = movx * (self.movement_speed * secs)
         movy = movy * (self.movement_speed * secs)
