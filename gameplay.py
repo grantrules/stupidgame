@@ -17,7 +17,7 @@ keys = {
 }
 
 class Player:
-    def __init__(self, sprites, renderer, pos=(100,100)):
+    def __init__(self, sprites, renderer, pos=(120,120)):
         self.movement_speed = 6 # pps
         self.animation_speed = 300 # ms per frame
         self.last_frame = 0
@@ -125,6 +125,7 @@ class GamePlay:
         self.cameray = 0
         self.pos = (0,0)
         self.ingame = True
+        self.window=(100,100)
 
         self.player = Player(self.sprites, self.renderer)
 
@@ -146,18 +147,33 @@ class GamePlay:
         for k, v in self.renderer.tmx_data.get_tile_colliders():
             logger.info("%s\t%s", k, list(v))
 
+    def translate_pos(self, pos):
+        (x, y) = pos
+        (winx, winy) = self.window
+        return (x - winx, y - winy)
+
     def draw(self, surface) -> None:
 
         temp = pygame.Surface(size=(640,480))
 
+        (winx, winy) = self.window
+
+        (px, py) = self.translate_pos(self.player.pos)
+        if 640 - px < 20:
+            self.window = (winx+20 - 640 - px, winy)
+        if px < 20:
+            self.window = (winx - 20 - px, winy)
+
+            
+
         # render the map onto the temporary surface
-        self.renderer.render_map(temp, (0,0))
+        self.renderer.render_map(temp, self.window)
 
         # now resize the temporary surface to the size of the display
         # this will also 'blit' the temp surface to the display
         pygame.transform.smoothscale(temp, surface.get_size(), surface)
 
-        surface.blit(self.player.render(), self.player.pos)
+        surface.blit(self.player.render(), self.translate_pos(self.player.pos))
 
 
     def run(self) -> None:

@@ -1,4 +1,5 @@
 import pygame
+import itertools
 from pytmx import TiledImageLayer
 from pytmx import TiledObjectGroup
 from pytmx import TiledTileLayer
@@ -59,7 +60,8 @@ class TiledRenderer(object):
                 self.render_image_layer(surface, layer)
 
     def in_view(self, x, y, window):
-        return x >= window[0] and x <= window[0] + 640 and y>= window[1] and y <= window[1] + 480
+        (winx, winy) = window
+        return x >= winx and x <= winx + 640 and y >= winy and y <= winy + 480
 
 
     def render_tile_layer(self, surface, layer, window):
@@ -69,13 +71,26 @@ class TiledRenderer(object):
         th = self.tmx_data.tileheight
         surface_blit = surface.blit
         in_view = self.in_view
+        (winx, winy) = window
+        # 40x30
+
+        tiles = []
+        start_x = int(winx/16)
+        start_y = int(winy/16)
+        perms = itertools.product(range(start_x, start_x + 40), range(start_y, start_y+30))
+        tiles = [(i, j, layer.parent.images[layer.data[j][i]]) for (i, j) in perms if layer.parent.images[layer.data[j][i]]]
+        #for i in range(t_start_x,t_start_x+40):
+        #    for j in range(t_start_y,t_start_y+40):
+        #        if layer.parent.images[layer.data[j][i]]:
+        #           tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
+
         
-        tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
-                if layer.name not in self.lasttiles \
-                else self.lasttiles[layer.name]
+        #tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
+        #        if layer.name not in self.lasttiles \
+        #        else self.lasttiles[layer.name]
 
         for x, y, image in tiles:
-            surface_blit(image, (x * tw, y * th))
+            surface_blit(image, (x * tw - winx, y * th - winy))
         
         self.lasttiles[layer.name] = tiles
 
