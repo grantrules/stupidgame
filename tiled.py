@@ -9,6 +9,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class TiledRenderer(object):
     """
     Super simple way to render a tiled map
@@ -36,9 +37,8 @@ class TiledRenderer(object):
 
         for k, v in self.tmx_data.get_tile_colliders():
             blockers[k] = [points_to_rect(points) for points in v]
-        
-        return blockers
 
+        return blockers
 
     def render_map(self, surface, window):
 
@@ -63,7 +63,6 @@ class TiledRenderer(object):
         (winx, winy) = window
         return x >= winx and x <= winx + 640 and y >= winy and y <= winy + 480
 
-
     def render_tile_layer(self, surface, layer, window):
         """Render all TiledTiles in this layer"""
         # deref these heavily used references for speed
@@ -75,23 +74,28 @@ class TiledRenderer(object):
         # 40x30
 
         tiles = []
-        start_x = int(winx/16)
-        start_y = int(winy/16)
-        perms = itertools.product(range(start_x, start_x + 40), range(start_y, start_y+30))
-        tiles = [(i, j, layer.parent.images[layer.data[j][i]]) for (i, j) in perms if layer.parent.images[layer.data[j][i]]]
-        #for i in range(t_start_x,t_start_x+40):
+        start_x = int(winx / 16)
+        start_y = int(winy / 16)
+        perms = itertools.product(
+            range(start_x, start_x + 40), range(start_y, start_y + 30)
+        )
+        tiles = [
+            (i, j, layer.parent.images[layer.data[j][i]])
+            for (i, j) in perms
+            if layer.parent.images[layer.data[j][i]]
+        ]
+        # for i in range(t_start_x,t_start_x+40):
         #    for j in range(t_start_y,t_start_y+40):
         #        if layer.parent.images[layer.data[j][i]]:
         #           tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
 
-        
-        #tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
+        # tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
         #        if layer.name not in self.lasttiles \
         #        else self.lasttiles[layer.name]
 
         for x, y, image in tiles:
             surface_blit(image, (x * tw - winx, y * th - winy))
-        
+
         self.lasttiles[layer.name] = tiles
 
     def render_object_layer(self, surface, layer):
@@ -107,7 +111,7 @@ class TiledRenderer(object):
         # iterate over all the objects in the layer
         # These may be Tiled shapes like circles or polygons, GID objects, or Tiled Objects
         for obj in layer:
-            #logger.info(obj)
+            # logger.info(obj)
 
             # objects with points are polygons or lines
             if obj.image:

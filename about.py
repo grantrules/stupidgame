@@ -6,7 +6,7 @@ class About:
         self.gamerunner = gamerunner
         self.lastrunner = lastrunner
         self.screen = gamerunner.screen
-    
+
     def run(self):
         pass
 

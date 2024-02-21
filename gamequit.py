@@ -2,14 +2,15 @@ import pygame
 
 from gamemenudialog import GameMenuDialog as Dialog
 
+
 class GameQuit:
     def __init__(self, gamerunner, lastrunner):
         self.gamerunner = gamerunner
         self.lastrunner = lastrunner
-        
+
         def on_yes():
             pygame.event.post(pygame.event.Event(pygame.QUIT))
-        
+
         def on_no():
             self.gamerunner.runner = self.lastrunner
 

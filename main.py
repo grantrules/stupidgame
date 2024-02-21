@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 game_title = "The Title of my Game"
 
 
-class GameRunner():
+class GameRunner:
 
     def __init__(self, screen):
         self.screen = screen
@@ -35,7 +35,7 @@ class GameRunner():
         while self.running:
 
             update_tick()
-            
+
             events = pygame.event.get()
 
             self.runner.handle_input(events)
@@ -43,7 +43,7 @@ class GameRunner():
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        if hasattr(self.runner, 'ingame') and self.runner.ingame:
+                        if hasattr(self.runner, "ingame") and self.runner.ingame:
                             self.runner = GameMenu(self, self.runner)
                 if event.type == pygame.QUIT:
                     if event.type == QUIT:
@@ -67,14 +67,16 @@ if __name__ == "__main__":
     gamesettings.load_settings()
     load_all_resources()
 
-    screen = init_screen(640,480)
+    screen = init_screen(640, 480)
     pygame.display.set_caption(game_title)
     logging.basicConfig(level=logging.DEBUG)
 
-    if gamesettings.settings['fullscreen']:
+    if gamesettings.settings["fullscreen"]:
         pygame.display.toggle_fullscreen()
 
-    gamesettings.register_setting_change_handler("fullscreen", lambda x: pygame.display.toggle_fullscreen())
+    gamesettings.register_setting_change_handler(
+        "fullscreen", lambda x: pygame.display.toggle_fullscreen()
+    )
 
     sound.initialize()
 

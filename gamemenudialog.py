@@ -2,8 +2,9 @@ import pygame
 
 from fonts import fonts
 
-inactive = (255,255,255)
-active = (255,0,0)
+inactive = (255, 255, 255)
+active = (255, 0, 0)
+
 
 class GameMenuDialog:
     def __init__(self, question: str, on_yes=None, on_no=None):
@@ -18,9 +19,9 @@ class GameMenuDialog:
 
     def draw(self, screen):
         if self.dirty:
-            #self.screen.fill((0,0,0))
+            # self.screen.fill((0,0,0))
             ren = self.font.render(self.question, 1, inactive)
-            screen.blit(ren, (screen.get_width() /2 - ren.get_width() / 2, 40))
+            screen.blit(ren, (screen.get_width() / 2 - ren.get_width() / 2, 40))
 
             yes = self.font.render("Yes", 1, active if self.selected == 0 else inactive)
             no = self.font.render("No", 1, active if self.selected == 1 else inactive)
