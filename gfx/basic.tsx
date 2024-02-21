@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.2" name="basic" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
  <image source="Overworld.png" width="640" height="576"/>
+ <tile id="6">
+  <objectgroup draworder="index" id="2">
+   <object id="3" x="8.73913" y="13.3478" width="7.17391" height="2.69565"/>
+   <object id="4" x="11.5217" y="10.7391" width="4.43478" height="2.56522"/>
+  </objectgroup>
+ </tile>
  <wangsets>
   <wangset name="Unnamed Set" type="corner" tile="-1">
    <wangcolor name="grass" color="#00ff00" tile="-1" probability="1"/>

@@ -4,6 +4,10 @@ from pytmx import TiledObjectGroup
 from pytmx import TiledTileLayer
 from pytmx.util_pygame import load_pygame
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class TiledRenderer(object):
     """
     Super simple way to render a tiled map
@@ -17,6 +21,23 @@ class TiledRenderer(object):
         self.map_size = tm.width * tm.tilewidth, tm.height * tm.tileheight
         self.tmx_data = tm
         self.lasttiles = {}
+
+        self.blockers = self.colliders_to_rects()
+
+    def colliders_to_rects(self):
+        # should be 4 points
+        # using point a and c should make rect
+        # points seem to go counterclockwise
+        blockers = {}
+
+        def points_to_rect(points):
+            return pygame.Rect((points.x, points.y), (points.width, points.height))
+
+        for k, v in self.tmx_data.get_tile_colliders():
+            blockers[k] = [points_to_rect(points) for points in v]
+        
+        return blockers
+
 
     def render_map(self, surface, window):
 
@@ -36,7 +57,6 @@ class TiledRenderer(object):
 
             elif isinstance(layer, TiledImageLayer):
                 self.render_image_layer(surface, layer)
-    
 
     def in_view(self, x, y, window):
         return x >= window[0] and x <= window[0] + 640 and y>= window[1] and y <= window[1] + 480
