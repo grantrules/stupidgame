@@ -77,7 +77,7 @@ class TiledRenderer(object):
         start_x = int(winx / 16)
         start_y = int(winy / 16)
         perms = itertools.product(
-            range(start_x, start_x + 40), range(start_y, start_y + 30)
+            range(start_x, start_x + 41), range(start_y, start_y + 31)
         )
         tiles = []
         for i, j in perms:

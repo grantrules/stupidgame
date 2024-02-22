@@ -178,10 +178,10 @@ class GamePlay:
         elif px < 20:
             self.window = (winx - (20 - px), winy)
 
-        if 480 - py < 36:
+        if 480 - py < 60:
             print((winy, py))
 
-            self.window = (winx, winy + (py - (480 - 36)))
+            self.window = (winx, winy + (py - (480 - 60)))
         elif py < 20:
             self.window = (winx, winy - (20 - py))
 
