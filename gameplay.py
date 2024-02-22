@@ -28,7 +28,11 @@ class Player:
         self.lastmovement = (0, 1)
         self.movement = (0, 0)
         self.w = 16
-        self.h = 16
+        self.h = 32
+        self.boxx = 0
+        self.boxy = 16
+        self.boxw = 16
+        self.boxh = 16
 
     def is_moving(self) -> bool:
         return self.movement != (0, 0)
@@ -51,7 +55,7 @@ class Player:
         h = self.h
         w = self.w
 
-        me = pygame.Rect((x, y), (w, h))
+        me = pygame.Rect((x+self.boxx, y+self.boxy), (self.boxw, self.boxh))
         tiles = self.get_touching_tiles((x, y))
         blockers = self.renderer.blockers
 
