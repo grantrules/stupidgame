@@ -36,12 +36,10 @@ class Player:
     def get_touching_tiles(self, pos) -> list:
         (x, y) = pos
         (x, y) = (int(x / 16), int(y / 16))
-        print(["i think i am trying to move to:", (x, y)])
-        h = self.h
-        w = self.w
+        #print(["i think i am trying to move to:", (x, y)])
 
         points = [(x, y), (x, y + 1), (x + 1, y), (x + 1, y + 1)]
-        print(["i am looking for these tiles: ", points])
+        #print(["i am looking for these tiles: ", points])
         tiles = [
             (_x * 16, _y * 16, self.renderer.tmx_data.layers[1].data[_y][_x])
             for (_x, _y) in points
@@ -172,10 +170,20 @@ class GamePlay:
         (winx, winy) = self.window
 
         (px, py) = self.translate_pos(self.player.pos)
+
+        #print(["winx", (winx, winy), "p", (px, py)])
+
         if 640 - px < 20:
-            self.window = (winx + 20 - 640 - px, winy)
-        if px < 20:
-            self.window = (winx - 20 - px, winy)
+            self.window = (winx + (px - (640 - 20)), winy)
+        elif px < 20:
+            self.window = (winx - (20 - px), winy)
+
+        if 480 - py < 36:
+            print((winy, py))
+
+            self.window = (winx, winy + (py - (480 - 36)))
+        elif py < 20:
+            self.window = (winx, winy - (20 - py))
 
         # render the map onto the temporary surface
         self.renderer.render_map(temp, self.window)

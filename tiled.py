@@ -79,11 +79,18 @@ class TiledRenderer(object):
         perms = itertools.product(
             range(start_x, start_x + 40), range(start_y, start_y + 30)
         )
-        tiles = [
-            (i, j, layer.parent.images[layer.data[j][i]])
-            for (i, j) in perms
-            if layer.parent.images[layer.data[j][i]]
-        ]
+        tiles = []
+        for i, j in perms:
+            if (j < len(layer.data) and i < len(layer.data[j]) and layer.parent.images[layer.data[j][i]]):
+                tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
+
+        #tiles = [
+        #    (i, j, layer.parent.images[layer.data[j][i]])
+        #    for (i, j) in perms
+        #    if j < len(layer.data) and i < len(layer.data[j]) and layer.parent.images[layer.data[j][i]]
+        #]
+                
+
         # for i in range(t_start_x,t_start_x+40):
         #    for j in range(t_start_y,t_start_y+40):
         #        if layer.parent.images[layer.data[j][i]]:
