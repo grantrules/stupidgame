@@ -41,7 +41,7 @@ class Player:
         points = [(x, y), (x, y + 1), (x + 1, y), (x + 1, y + 1)]
         #print(["i am looking for these tiles: ", points])
         tiles = [
-            (_x * 16, _y * 16, self.renderer.tmx_data.layers[1].data[_y][_x])
+            (_x * 16, _y * 16, self.renderer.tmx_data.layers[0].data[_y][_x])
             for (_x, _y) in points
         ]
         return set(tiles)

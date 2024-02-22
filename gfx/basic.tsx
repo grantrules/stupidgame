@@ -7,6 +7,85 @@
    <object id="4" x="11.5217" y="10.7391" width="4.43478" height="2.56522"/>
   </objectgroup>
  </tile>
+ <tile id="40">
+  <objectgroup draworder="index" id="2">
+   <object id="2" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="41">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="242">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="11" width="5" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="243">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="11" width="16" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="244">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="11" width="5" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="282">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="0" width="5" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="283">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="284">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="5" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="322">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="0" width="5" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="323">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="324">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="5" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="362">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="5" height="16"/>
+   <object id="2" x="0" y="0" width="16" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="363">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="16" height="5"/>
+   <object id="2" x="11" y="0" width="5" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="402">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="5" height="16"/>
+   <object id="2" x="0" y="11" width="16" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="403">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="11" y="0" width="5" height="16"/>
+   <object id="2" x="0" y="11" width="16" height="5"/>
+  </objectgroup>
+ </tile>
  <wangsets>
   <wangset name="Unnamed Set" type="corner" tile="-1">
    <wangcolor name="grass" color="#00ff00" tile="-1" probability="1"/>
