@@ -8,19 +8,42 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TiledRenderer(object):
+class GameRenderer(object):
     """
     Super simple way to render a tiled map
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, gameplay, window):
         tm = load_pygame(filename)
 
         self.map_size = tm.width * tm.tilewidth, tm.height * tm.tileheight
         self.tmx_data = tm
         self.lasttiles = {}
+        self.window = window
+        self.window_updated = True
+        self.gameplay = gameplay
 
         self.blockers = self.colliders_to_rects()
+
+    def update_window(self):
+        
+        lastwindow = self.window
+        (winx, winy) = self.window
+
+        (px, py) = self.translate_pos(self.gameplay.players[0].pos)
+
+        if 640 - px < 20:
+            winx = winx + (px - (640 - 20))
+        elif px < 20:
+            winx = winx - (20 - px)
+
+        if 480 - py < 60:
+            winy = winy + (py - (480 - 60))
+        elif py < 20:
+            winy = winy - (20 - py)
+
+        self.window = (winx, winy)
+        self.window_updated = self.window != lastwindow
 
     def colliders_to_rects(self):
         # should be 4 points
@@ -36,7 +59,11 @@ class TiledRenderer(object):
 
         return blockers
 
-    def render_map(self, surface, window):
+    def render_things(self, surface, layer, isForeground):
+        self.render_tile_layer(surface, layer)
+
+
+    def render_map(self, surface):
 
         # fill the background color of our render surface
         if self.tmx_data.background_color:
@@ -47,19 +74,27 @@ class TiledRenderer(object):
             # each layer can be handled differently by checking their type
 
             if isinstance(layer, TiledTileLayer):
-                self.render_tile_layer(surface, layer, window)
+
+                if layer.name == 'things':
+                    self.render_things(surface, layer, False)
+                    for player in self.gameplay.players:
+                        surface.blit(player.render(), self.translate_pos(player.pos))
+                else:
+                    self.render_tile_layer(surface, layer)
+
+        self.window_updated = False
 
     def in_view(self, x, y, window):
         (winx, winy) = window
         return x >= winx and x <= winx + 640 and y >= winy and y <= winy + 480
 
-    def render_tile_layer(self, surface, layer, window):
+    def render_tile_layer(self, surface, layer):
         """Render all TiledTiles in this layer"""
         # deref these heavily used references for speed
         tw = self.tmx_data.tilewidth
         th = self.tmx_data.tileheight
         surface_blit = surface.blit
-        (winx, winy) = window
+        (winx, winy) = self.window
         # 40x30
 
         tiles = []
@@ -105,3 +140,9 @@ class TiledRenderer(object):
     def render_image_layer(self, surface, layer):
         if layer.image:
             surface.blit(layer.image)
+
+
+    def translate_pos(self, pos):
+        (x, y) = pos
+        (winx, winy) = self.window
+        return (x - winx, y - winy)
