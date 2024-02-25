@@ -1,3 +1,4 @@
+import itertools
 import pygame
 from tick import get_tick
 from input import movement_to_direction
@@ -30,10 +31,10 @@ class Player:
         points = [(x, y), (x, y + 1), (x + 1, y), (x + 1, y + 1)]
         #print(["i am looking for these tiles: ", points])
         tiles = [
-            (_x * 16, _y * 16, self.renderer.tmx_data.layers[0].data[_y][_x])
+            (_x * 16, _y * 16, self.renderer.get_tile_from_layers(_x,_y))
             for (_x, _y) in points
         ]
-        return set(tiles)
+        return tiles
 
     def can_move_to(self, x, y):
 
@@ -44,25 +45,18 @@ class Player:
         tiles = self.get_touching_tiles((x, y))
         blockers = self.renderer.blockers
 
-        def uhg(tile, blockers):
-            (x, y, gid) = tile
+        def uhg(x, y, blockers):
             return [
                 pygame.Rect((int(x + b.x), int(y + b.y)), (b.w, b.h)) for b in blockers
             ]
 
-        colliders = filter(
-            lambda x: x,
-            [
-                uhg((x, y, gid), blockers[gid]) if gid in blockers else None
-                for (x, y, gid) in tiles
-            ],
-        )
-
-        for c in colliders:
-            print([c, me])
-            if me.collidelist(c) > -1:
-                return False
+        for (x, y, gids) in tiles:
+            for gid in gids:
+                if gid in blockers:
+                    if me.collidelist(uhg(x, y, blockers[gid])) > -1:
+                        return False
         return True
+
 
     def move(self, movement, time) -> None:
         secs = time / 100

@@ -1,3 +1,4 @@
+import itertools
 import pygame
 
 from pytmx import TiledTileLayer
@@ -62,6 +63,10 @@ class GameRenderer(object):
     def render_things(self, surface, layer, isForeground):
         self.render_tile_layer(surface, layer)
 
+
+    def get_tile_from_layers(self, x, y):
+        data = [layer.data[y][x] for layer in self.tmx_data.layers if isinstance(layer, TiledTileLayer)]
+        return data
 
     def render_map(self, surface):
 
