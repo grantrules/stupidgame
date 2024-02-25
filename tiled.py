@@ -1,7 +1,5 @@
 import pygame
-import itertools
-from pytmx import TiledImageLayer
-from pytmx import TiledObjectGroup
+
 from pytmx import TiledTileLayer
 from pytmx.util_pygame import load_pygame
 
@@ -18,8 +16,6 @@ class TiledRenderer(object):
     def __init__(self, filename):
         tm = load_pygame(filename)
 
-        # self.size will be the pixel size of the map
-        # this value is used later to render the entire map to a pygame surface
         self.map_size = tm.width * tm.tilewidth, tm.height * tm.tileheight
         self.tmx_data = tm
         self.lasttiles = {}
@@ -53,12 +49,6 @@ class TiledRenderer(object):
             if isinstance(layer, TiledTileLayer):
                 self.render_tile_layer(surface, layer, window)
 
-            elif isinstance(layer, TiledObjectGroup):
-                self.render_object_layer(surface, layer)
-
-            elif isinstance(layer, TiledImageLayer):
-                self.render_image_layer(surface, layer)
-
     def in_view(self, x, y, window):
         (winx, winy) = window
         return x >= winx and x <= winx + 640 and y >= winy and y <= winy + 480
@@ -69,36 +59,18 @@ class TiledRenderer(object):
         tw = self.tmx_data.tilewidth
         th = self.tmx_data.tileheight
         surface_blit = surface.blit
-        in_view = self.in_view
         (winx, winy) = window
         # 40x30
 
         tiles = []
         start_x = int(winx / 16)
         start_y = int(winy / 16)
-        perms = itertools.product(
-            range(start_x, start_x + 41), range(start_y, start_y + 31)
-        )
         tiles = []
-        for i, j in perms:
-            if (j < len(layer.data) and i < len(layer.data[j]) and layer.parent.images[layer.data[j][i]]):
-                tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
 
-        #tiles = [
-        #    (i, j, layer.parent.images[layer.data[j][i]])
-        #    for (i, j) in perms
-        #    if j < len(layer.data) and i < len(layer.data[j]) and layer.parent.images[layer.data[j][i]]
-        #]
-                
-
-        # for i in range(t_start_x,t_start_x+40):
-        #    for j in range(t_start_y,t_start_y+40):
-        #        if layer.parent.images[layer.data[j][i]]:
-        #           tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
-
-        # tiles = list(filter(lambda t: in_view(t[0]*tw, t[1]*th, window), layer.tiles())) \
-        #        if layer.name not in self.lasttiles \
-        #        else self.lasttiles[layer.name]
+        for i in range(start_x, start_x + 41):
+            for j in range(start_y, start_y + 31):
+                if (j < len(layer.data) and i < len(layer.data[j]) and layer.parent.images[layer.data[j][i]]):
+                    tiles.append((i, j, layer.parent.images[layer.data[j][i]]))
 
         for x, y, image in tiles:
             surface_blit(image, (x * tw - winx, y * th - winy))
@@ -107,7 +79,6 @@ class TiledRenderer(object):
 
     def render_object_layer(self, surface, layer):
         """Render all TiledObjects contained in this layer"""
-        # deref these heavily used references for speed
         draw_lines = pygame.draw.lines
         surface_blit = surface.blit
 
