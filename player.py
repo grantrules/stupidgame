@@ -45,7 +45,7 @@ class Player:
         tiles = self.get_touching_tiles((x, y))
         blockers = self.renderer.blockers
 
-        def uhg(x, y, blockers):
+        def make_rects(x, y, blockers):
             return [
                 pygame.Rect((int(x + b.x), int(y + b.y)), (b.w, b.h)) for b in blockers
             ]
@@ -53,7 +53,7 @@ class Player:
         for (x, y, gids) in tiles:
             for gid in gids:
                 if gid in blockers:
-                    if me.collidelist(uhg(x, y, blockers[gid])) > -1:
+                    if me.collidelist(make_rects(x, y, blockers[gid])) > -1:
                         return False
         return True
 
